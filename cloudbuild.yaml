@@ -1,0 +1,32 @@
+steps:
+
+- id: build-helm-image
+  name: gcr.io/cloud-builders/docker
+  entrypoint: bash
+  args:
+    - -c
+    - |
+      docker build --build-arg HELM_VERSION=${TAG_NAME} --tag=gcr.io/$PROJECT_ID/cloud-builders-helm:latest --tag=gcr.io/$PROJECT_ID/cloud-builders-helm:$COMMIT_SHA --tag=gcr.io/$PROJECT_ID/cloud-builders-helm:${TAG_NAME} . && \
+      docker push gcr.io/$PROJECT_ID/cloud-builders-helm:latest && \
+      docker push gcr.io/$PROJECT_ID/cloud-builders-helm:$COMMIT_SHA && \
+      docker push gcr.io/$PROJECT_ID/cloud-builders-helm:${TAG_NAME}
+
+- id: get-kube-config
+  name: gcr.io/cloud-builders/kubectl
+  env:
+    - CLOUDSDK_CORE_PROJECT=${_CLOUDSDK_CORE_PROJECT}
+    - CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}
+    - KUBECONFIG=/workspace/.kube/config
+  args:
+    - cluster-info
+
+- id: upgrade-gke-cluster
+  name: gcr.io/$PROJECT_ID/cloud-builders-helm:${TAG_NAME}
+  env:
+    - KUBECONFIG=/workspace/.kube/config
+  args:
+    - helm
+    - init
+    - --upgrade
+
