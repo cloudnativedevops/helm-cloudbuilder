@@ -1,4 +1,4 @@
-FROM gcr.io/google_containers/ubuntu-slim:latest
+FROM gcr.io/google_containers/ubuntu-slim:0.14
 
 ARG HELM_VERSION
 
