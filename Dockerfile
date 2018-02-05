@@ -13,7 +13,6 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
   && wget https://storage.googleapis.com/kubernetes-helm/${HELM_FILENAME} -P /tmp \
   && tar -zxvf /tmp/${HELM_FILENAME} -C /tmp \
   && mv /tmp/linux-amd64/helm /usr/local/bin \
-  && chmod +x /usr/local/bin/kubesec \
   && rm -rf /tmp/*
 
 RUN helm init --client-only
