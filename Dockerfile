@@ -1,6 +1,6 @@
 FROM alpine
 
-ENV HELM_VERSION="v2.9.1"
+ENV HELM_VERSION="v2.12.0"
 ENV KUBEVAL_VERSION="0.7.1"
 
 RUN apk add --update ca-certificates \
